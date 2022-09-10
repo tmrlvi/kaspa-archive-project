@@ -149,7 +149,7 @@ function App() {
       <Text align="left">
       <Title order={3}>Direct Upload</Title>
       To upload your datadir directly using <Anchor href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"><Code>aws cli</Code></Anchor>, run the following snippet in your shell, with the path to your compressed datadir instead of <Code>`&lt;datadir&gt;`</Code>.
-      <Prism language="shell">{
+      <Prism language="bash">{
         `aws configure set aws_access_key_id AKIA3SC2F53XHCIMJB4U --profile kaspaarchive
 aws configure set aws_secret_access_key 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 --profile kaspaarchive
 aws configure set region eu-west-1 --profile kaspaarchive
