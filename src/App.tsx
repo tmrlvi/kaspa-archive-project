@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 
-import { Title, Group, Text, Progress, useMantineTheme, Timeline, Space } from '@mantine/core';
+import { Title, Group, Text, Progress, useMantineTheme, Timeline, Space, Code, Anchor } from '@mantine/core';
 import { IconUpload, IconFolder, IconX, IconCheck } from '@tabler/icons';
 import { Dropzone, DropzoneProps } from '@mantine/dropzone';
 import { showNotification } from '@mantine/notifications';
+import { Prism } from '@mantine/prism';
 
 import { S3Client, PutObjectCommand, ListObjectsCommand, DeleteObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
@@ -21,6 +22,7 @@ function App() {
   const theme = useMantineTheme();
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [date, time] = (new Date()).toISOString().split("T")
 
   function send(file: File) {
     const creds = fromCognitoIdentityPool({
@@ -34,7 +36,6 @@ function App() {
     });
 
     s3.config.credentials().then((creds: any) => {
-      const [date, time] = (new Date()).toISOString().split("T")
 
       const uploadParams = {
         Bucket: 'kaspa-datadir-submitted',
@@ -145,9 +146,20 @@ function App() {
       </Dropzone>
       <Progress value={progress}/>
       <Space h="md" />
+      <Text align="left">
+      <Title order={3}>Direct Upload</Title>
+      To upload your datadir directly using <Anchor href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"><Code>aws cli</Code></Anchor>, run the following snippet in your shell, with the path to your compressed datadir instead of <Code>`&lt;datadir&gt;`</Code>.
+      <Prism language="shell">{
+        `aws configure set aws_access_key_id AKIA3SC2F53XHCIMJB4U --profile kaspaarchive
+aws configure set aws_secret_access_key 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 --profile kaspaarchive
+aws configure set region eu-west-1 --profile kaspaarchive
+aws s3 cp <datadir> s3://kaspa-datadir-submitted/${date}/Manual/ --profile kaspaarchive`
+      }</Prism>
+      </Text>
+      <Space h="md" />
       <Title order={2}>Planned</Title>
       <Timeline active={0}>
-        <Timeline.Item title="Basic datadirs sharing" lineVariant="dashed">
+        <Timeline.Item title="Basic datadirs sharing">
           <Text color="dimmed" size="sm">You can now share your compressed datadirs easily.</Text>
         </Timeline.Item>
         <Timeline.Item title="Provide completion status">
